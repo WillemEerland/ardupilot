@@ -106,12 +106,6 @@ bool JSBSim::create_templates(void)
 "  <run start=\"0\" end=\"10000000\" dt=\"0.001\">\n"
 "    <property value=\"0\"> simulation/notify-time-trigger </property>\n"
 "\n"
-"    <event name=\"start engine\">\n"
-"      <condition> simulation/sim-time-sec le 0.01 </condition>\n"
-"      <set name=\"propulsion/engine[0]/set-running\" value=\"1\"/>\n"
-"      <notify/>\n"
-"    </event>\n"
-"\n"
 "    <event name=\"Trim\">\n"
 "      <condition>simulation/sim-time-sec ge 0.01</condition>\n"
 "      <set name=\"simulation/do_simple_trim\" value=\"2\"/>\n"
@@ -158,6 +152,7 @@ bool JSBSim::create_templates(void)
             "  <phi unit=\"DEG\"> 0.0 </phi>\n"
             "  <theta unit=\"DEG\"> 13.0 </theta>\n"
             "  <psi unit=\"DEG\"> %f </psi>\n"
+            "  <running> -1 </running>\n"
             "</initialize>\n",
             home.lat*1.0e-7,
             home.lng*1.0e-7,
@@ -355,13 +350,14 @@ void JSBSim::send_servos(const struct sitl_input &input)
              "set fcs/aileron-cmd-norm %f\n"
              "set fcs/elevator-cmd-norm %f\n"
              "set fcs/rudder-cmd-norm %f\n"
-             "set fcs/throttle-cmd-norm %f\n"
+             "set fcs/throttle-cmd-norm[0] %f\n"
+             "set fcs/throttle-cmd-norm[1] %f\n"
              "set atmosphere/psiw-rad %f\n"
              "set atmosphere/wind-mag-fps %f\n"
              "set atmosphere/turbulence/milspec/windspeed_at_20ft_AGL-fps %f\n"
              "set atmosphere/turbulence/milspec/severity %f\n"
              "iterate 1\n",
-             aileron, elevator, rudder, throttle,
+             aileron, elevator, rudder, throttle, throttle,
              radians(input.wind.direction),
              wind_speed_fps,
              wind_speed_fps/3,
